@@ -4,10 +4,13 @@ pipeline {
         registryCredentials = "DOCKER_LOGIN"
         frontendImage = ""
         backendImage = ""
-        BACKEND = ''
-        FRONTEND = ''
+        BACKEND = 'https://github.com/campanula/lbg-car-spring-app-starter.git'
+        FRONTEND = 'https://github.com/campanula/lbg-car-react-starter.git'
     }
     agent any
+    tools {        
+        maven 'M3'     
+    }
     stages {
         
         stage('Setup backend') {
@@ -26,6 +29,7 @@ pipeline {
             steps {
                 script {
                     dir('frontend') {
+                        git url: "${FRONTEND}", branch: 'main'
                         frontendImage = docker.build("${registry}:${env.BUILD_NUMBER}", '-f Dockerfile .')
                     }
                 }
@@ -63,4 +67,4 @@ pipeline {
             }
         }
     }
-}
+
