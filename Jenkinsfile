@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "damiicodes/sprint-app"
-        registryCredentials = "DOCKER_LOGIN"
+        registryCredentials = "dockerhub_id"
         frontendImage = ""
         backendImage = ""
         BACKEND = 'https://github.com/campanula/lbg-car-spring-app-starter.git'
