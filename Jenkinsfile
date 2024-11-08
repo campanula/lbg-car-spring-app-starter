@@ -18,7 +18,6 @@ pipeline {
                 script {
                     dir('backend'){
                         git url: "${BACKEND}", branch: 'main'
-                        sh 'mvn -Dmaven.test.skip -Dmaven.compile.skip package'
                         backendImage = docker.build("${registry}:${env.BUILD_NUMBER}", '-f Dockerfile .')
                     }
             
@@ -31,7 +30,6 @@ pipeline {
                 script {
                     dir('frontend') {
                         git url: "${FRONTEND}", branch: 'main'
-                        sh 'mvn -Dmaven.test.skip -Dmaven.compile.skip package'
                         frontendImage = docker.build("${registry}:${env.BUILD_NUMBER}", '-f Dockerfile .')
                     }
                 }
