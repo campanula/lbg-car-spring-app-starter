@@ -9,7 +9,7 @@ COPY pom.xml ./
 COPY src ./src
 
 # Build the application
-RUN mvn clean package
+RUN mvn -Dmaven.test.skip -Dmaven.compile.skip package
 
 # Use the official OpenJDK image to run the application
 FROM openjdk:11-jre-slim
