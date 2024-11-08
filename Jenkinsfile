@@ -1,5 +1,6 @@
 pipeline {
     environment {
+        VM_HOST = "35.210.6.206"
         registry = "damiicodes/sprint-app"
         registryCredentials = "dockerhub_id"
         frontendImage = ""
@@ -63,6 +64,17 @@ pipeline {
                 script {
                     sh 'docker image prune --all --force --filter "until=48h"'
                 }
+            }
+        }
+
+        stage('Deploy to server') {
+            steps {
+                sh """
+                    ssh -o StrictHostKeyChecking=no jenkins@${VM_HOST}
+                    git clone ${BACKEND}
+                    cd lbg-car-spring-app-starter
+                    sudo docker-compose up -d
+                """
             }
         }
     }
