@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "damiicodes/sprint-app"
-        registryCredentials = "DOCKER_LOGIN"
+        registryCredentials = "dockerhub_id"
         frontendImage = ""
         backendImage = ""
         BACKEND = 'https://github.com/campanula/lbg-car-spring-app-starter.git'
@@ -18,7 +18,6 @@ pipeline {
                 script {
                     dir('backend'){
                         git url: "${BACKEND}", branch: 'main'
-                        sh 'mvn -Dmaven.test.skip -Dmaven.compile.skip package'
                         backendImage = docker.build("${registry}-backend:${env.BUILD_NUMBER}", '-f Dockerfile .')
                     }
             
@@ -31,7 +30,6 @@ pipeline {
                 script {
                     dir('frontend') {
                         git url: "${FRONTEND}", branch: 'main'
-                        sh 'mvn -Dmaven.test.skip -Dmaven.compile.skip package'
                         frontendImage = docker.build("${registry}-frontend:${env.BUILD_NUMBER}", '-f Dockerfile .')
                     }
                 }
