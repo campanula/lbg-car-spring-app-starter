@@ -1,0 +1,66 @@
+pipeline {
+    environment {
+        registry = "damiicodes/sprint-app"
+        registryCredentials = "DOCKER_LOGIN"
+        frontendImage = ""
+        backendImage = ""
+        BACKEND = ''
+        FRONTEND = ''
+    }
+    agent any
+    stages {
+        
+        stage('Setup backend') {
+            steps {
+                script {
+                    dir('backend'){
+                        git url: "${BACKEND}", branch: 'main'
+                        backendImage = docker.build("${registry}:${env.BUILD_NUMBER}", '-f Dockerfile .')
+                    }
+            
+                }
+            }
+        }
+
+        stage('Setup frontend') {
+            steps {
+                script {
+                    dir('frontend') {
+                        frontendImage = docker.build("${registry}:${env.BUILD_NUMBER}", '-f Dockerfile .')
+                    }
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    dir('backend'){
+                        docker.withRegistry('', registryCredentials) {
+                            // Push the image with both the build number and latest tags
+                            backendImage.push("${env.BUILD_NUMBER}")
+                            backendImage.push("latest")
+                            }
+                        }
+                    dir('frontend'){
+                        docker.withRegistry('', registryCredentials) {
+                            // Push the image with both the build number and latest tags
+                            frontendImage.push("${env.BUILD_NUMBER}")
+                            frontendImage.push("latest")
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        stage('Clean up') {
+            steps {
+                script {
+                    sh 'docker image prune --all --force --filter "until=48h"'
+                }
+            }
+        }
+    }
+}
