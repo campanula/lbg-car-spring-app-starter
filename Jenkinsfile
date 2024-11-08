@@ -73,7 +73,7 @@ pipeline {
                     ssh -o StrictHostKeyChecking=no jenkins@${VM_HOST}
                     git clone ${BACKEND}
                     cd lbg-car-spring-app-starter
-                    sudo docker-compose up -d
+                    docker-compose up -d
                 """
             }
         }
