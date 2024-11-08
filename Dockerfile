@@ -12,7 +12,7 @@ COPY src ./src
 RUN mvn -Dmaven.test.skip -Dmaven.compile.skip package
 
 # Use the official OpenJDK image to run the application
-FROM openjdk:11-jre-slim
+FROM openjdk:17-jre-slim
 
 # Set the working directory inside the container
 WORKDIR /app
